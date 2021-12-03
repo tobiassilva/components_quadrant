@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:quadrant_components/src/model/quadrant_info_request.dart';
 
-List<InfoRequests> listaRequest = [];
+List listaRequest = [];
 
 class RequestsComponents {
   Future getRequests(_url) async {
@@ -14,49 +16,55 @@ class RequestsComponents {
       if (_resultConexao) {
         _requestGet = await http.get(Uri.parse(_url));
         if (_requestGet.statusCode == 200 && _requestGet.body != null) {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "GET",
-            "${_requestGet.statusCode}",
-            "$_resultConexao",
-            "Sucesso",
-            _requestGet.body,
-          ));
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "GET",
+            "status_code": "${_requestGet.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "Sucesso",
+            "retorno": "${_requestGet.body}",
+          };
+          listaRequest.add(jsonEncode(_data));
+
           return listaRequest;
         } else {
           // NULL SÓ PRA  QUANDO A REQUISIÇÃO NÃO FUNCIONOU
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "GET",
-            "${_requestGet.statusCode}",
-            "$_resultConexao",
-            "1",
-            'Não possui',
-          ));
+          /*   */
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "GET",
+            "status_code": "${_requestGet.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "1",
+            "retorno": "Não possui",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         }
       } else {
-        listaRequest.add(InfoRequests(
-          "$_url",
-          "GET",
-          'Não possui',
-          "$_resultConexao",
-          "2",
-          'Não possui',
-        ));
+        var _data = {
+          "requisicao_url": "$_url",
+          "tipo_requisicao": "GET",
+          "status_code": "Não possui",
+          "conexao": "$_resultConexao",
+          "mensagem": "2",
+          "retorno": "Não possui",
+        };
+        listaRequest.add(jsonEncode(_data));
         // FALSE PARA QUANDO O USUARIO TEVE PROBLEMAS COM CONEXAO OU ALGO DEU ERRADO DURANTE A EXECUÇÃO DO COD
         return listaRequest;
       }
     } on Exception catch (e) {
       print('ERRO> Requisição esta errada ou conexão\n Exception:$e');
-      listaRequest.add(InfoRequests(
-        "$_url",
-        "GET",
-        'Não possui',
-        "$_resultConexao",
-        "3",
-        'Não possui',
-      ));
+      var _data = {
+        "requisicao_url": "$_url",
+        "tipo_requisicao": "GET",
+        "status_code": "Não possui",
+        "conexao": "$_resultConexao",
+        "mensagem": "3",
+        "retorno": "Não possui"
+      };
+      listaRequest.add(jsonEncode(_data));
       return listaRequest;
     }
   }
@@ -70,48 +78,54 @@ class RequestsComponents {
         _requestGet = await http.get(Uri.parse(_url + _parametros));
 
         if (_requestGet.statusCode == 200 && _requestGet.body != null) {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "GET",
-            "${_requestGet.statusCode}",
-            "$_resultConexao",
-            "Sucesso",
-            _requestGet.body,
-          ));
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "GET",
+            "status_code": "${_requestGet.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "Sucesso",
+            "retorno": "${_requestGet.body}",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         } else {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "GET",
-            "${_requestGet.statusCode}",
-            "$_resultConexao",
-            "1",
-            'Não possui',
-          ));
+          // NULL SÓ PRA  QUANDO A REQUISIÇÃO NÃO FUNCIONOU
+          /*   */
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "GET",
+            "status_code": "${_requestGet.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "1",
+            "retorno": "Não possui",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         }
       } else {
-        listaRequest.add(InfoRequests(
-          "$_url",
-          "GET Com Parametros",
-          'Não possui',
-          "$_resultConexao",
-          "2",
-          'Não possui',
-        ));
+        var _data = {
+          "requisicao_url": "$_url",
+          "tipo_requisicao": "GET",
+          "status_code": "Não possui",
+          "conexao": "$_resultConexao",
+          "mensagem": "2",
+          "retorno": "Não possui",
+        };
+        listaRequest.add(jsonEncode(_data));
         // FALSE PARA QUANDO O USUARIO TEVE PROBLEMAS COM CONEXAO OU ALGO DEU ERRADO DURANTE A EXECUÇÃO DO COD
         return listaRequest;
       }
     } on Exception catch (e) {
       print('ERRO> Requisição esta errada ou conexão\n Exception:$e');
-      listaRequest.add(InfoRequests(
-        "$_url",
-        "GET",
-        'Não possui',
-        "$_resultConexao",
-        "3",
-        'Não possui',
-      ));
+      var _data = {
+        "requisicao_url": "$_url",
+        "tipo_requisicao": "GET",
+        "status_code": "Não possui",
+        "conexao": "$_resultConexao",
+        "mensagem": "3",
+        "retorno": "Não possui",
+      };
+      listaRequest.add(jsonEncode(_data));
       return listaRequest;
     }
   }
@@ -123,99 +137,108 @@ class RequestsComponents {
       if (_resultConexao && _body != null && _url != null) {
         _postRequest = await http.post(Uri.parse(_url), body: _body);
         if (_postRequest.statusCode == 200 && _postRequest.body != null) {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "POST",
-            "${_postRequest.statusCode}",
-            "$_resultConexao",
-            "Sucesso",
-            _postRequest.body,
-          ));
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "POST",
+            "status_code": "${_postRequest.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "1",
+            "retorno": "Não possui",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         } else {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "POST",
-            "${_postRequest.statusCode}",
-            "$_resultConexao",
-            "1",
-            'Não possui',
-          ));
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "POST",
+            "status_code": "${_postRequest.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "1",
+            "retorno": "Não possui",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         }
       } else {
-        listaRequest.add(InfoRequests(
-          "$_url",
-          "POST Com Parametros",
-          'Não possui',
-          "$_resultConexao",
-          "2",
-          'Não possui',
-        ));
+        var _data = {
+          "requisicao_url": "$_url",
+          "tipo_requisicao": "POST Com Parametros",
+          "status_code": "Não possui",
+          "conexao": "$_resultConexao",
+          "mensagem": "2",
+          "retorno": "Não possui",
+        };
+        listaRequest.add(jsonEncode(_data));
         // FALSE PARA QUANDO O USUARIO TEVE PROBLEMAS COM CONEXAO OU ALGO DEU ERRADO DURANTE A EXECUÇÃO DO COD
         return listaRequest;
       }
     } on Exception catch (e) {
-      listaRequest.add(InfoRequests(
-        "$_url",
-        "POST",
-        'Não possui',
-        "$_resultConexao",
-        "3",
-        'Não possui',
-      ));
+      var _data = {
+        "requisicao_url": "$_url",
+        "tipo_requisicao": "POST",
+        "status_code": "Não possui",
+        "conexao": "$_resultConexao",
+        "mensagem": "3",
+        "retorno": "Não possui",
+      };
+      listaRequest.add(jsonEncode(_data));
       return listaRequest;
     }
   }
 
   Future updateRequests(_url, _body) async {
-    var _resultConexao, _postRequest;
+    var _resultConexao, _putRequest;
     try {
       _resultConexao = await resultConexao();
       if (_resultConexao && _body != null && _url != null) {
-        _postRequest = await http.put(Uri.parse(_url), body: _body);
-        if (_postRequest.statusCode == 200 && _postRequest.body != null) {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "UPDATE(PUT)",
-            "${_postRequest.statusCode}",
-            "$_resultConexao",
-            "Sucesso",
-            _postRequest.body,
-          ));
+        _putRequest = await http.put(Uri.parse(_url), body: _body);
+        if (_putRequest.statusCode == 200 && _putRequest.body != null) {
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "GET",
+            "status_code": "${_putRequest.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "Sucesso",
+            "retorno": "${_putRequest.body}",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         } else {
-          listaRequest.add(InfoRequests(
-            "$_url",
-            "UPDATE(PUT)",
-            "${_postRequest.statusCode}",
-            "$_resultConexao",
-            "1",
-            'Não possui',
-          ));
+          var _data = {
+            "requisicao_url": "$_url",
+            "tipo_requisicao": "UPDATE(PUT)",
+            "status_code": "${_putRequest.statusCode}",
+            "conexao": "$_resultConexao",
+            "mensagem": "1",
+            "retorno": "Não possui",
+          };
+          listaRequest.add(jsonEncode(_data));
           return listaRequest;
         }
       } else {
-        listaRequest.add(InfoRequests(
-          "$_url",
-          "UPDATE(PUT) Com Parametros",
-          'Não possui',
-          "$_resultConexao",
-          "2",
-          'Não possui',
-        ));
+        var _data = {
+          "requisicao_url": "$_url",
+          "tipo_requisicao": "UPDATE(PUT) Com Parametros",
+          "status_code": "Não possui",
+          "conexao": "$_resultConexao",
+          "mensagem": "2",
+          "retorno": "Não possui",
+        };
+
+        listaRequest.add(jsonEncode(_data));
         // FALSE PARA QUANDO O USUARIO TEVE PROBLEMAS COM CONEXAO OU ALGO DEU ERRADO DURANTE A EXECUÇÃO DO COD
         return listaRequest;
       }
     } on Exception catch (e) {
-      listaRequest.add(InfoRequests(
-        "$_url",
-        "UPDATE(PUT)",
-        'Não possui',
-        "$_resultConexao",
-        "3",
-        'Não possui',
-      ));
+      var _data = {
+        "requisicao_url": "$_url",
+        "tipo_requisicao": "UPDATE(PUT)",
+        "status_code": "Não possui",
+        "conexao": "$_resultConexao",
+        "mensagem": "3",
+        "retorno": "Não possui",
+      };
+      listaRequest.add(jsonEncode(_data));
       return listaRequest;
     }
   }
