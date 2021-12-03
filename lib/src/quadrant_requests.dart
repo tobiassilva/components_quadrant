@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
-import 'package:quadrant_components/src/model/quadrant_info_request.dart';
 
 List listaRequest = [];
 
